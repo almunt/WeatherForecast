@@ -13,6 +13,8 @@ internal sealed class WeatherApiProvider : IWeatherForecastProvider
         this.apiClient = apiClient;
     }
 
+    private const int ForecastDays = 30;
+
     private readonly IWeatherApiClient apiClient;
 
     public async Task<ProviderWeatherForecast> GetAsync(GeoCoordinate geoCoordinate, DateOnly date, CancellationToken cancellationToken)
@@ -21,7 +23,7 @@ internal sealed class WeatherApiProvider : IWeatherForecastProvider
 
         var query = $"{geoCoordinate.Latitude},{geoCoordinate.Longitude}";
 
-        var response = await this.apiClient.GetForecastAsync(query, 3, cancellationToken).ConfigureAwait(false);
+        var response = await this.apiClient.GetForecastAsync(query, ForecastDays, cancellationToken).ConfigureAwait(false);
 
         var forecast = response.Forecast.Forecastday.FirstOrDefault(day => day.Date == new DateTime(date, new TimeOnly(0)));
 

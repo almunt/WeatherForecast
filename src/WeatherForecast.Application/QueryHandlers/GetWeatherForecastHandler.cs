@@ -1,6 +1,7 @@
 ﻿using EnsureThat;
 using MediatR;
 using WeatherForecast.Application.Domain;
+using WeatherForecast.Application.Exceptions;
 using WeatherForecast.Application.Queries;
 
 namespace WeatherForecast.Application.QueryHandlers;
@@ -40,8 +41,10 @@ internal sealed class GetWeatherForecastHandler : IRequestHandler<GetWeatherFore
         var geoCoordinate = await this.geoCodingService
             .GetGeoCoordinatesAsync(request.City, request.Country, cancellationToken)
             .ConfigureAwait(false);
-
-        //TODO: handle null geo coordinate
+        if (geoCoordinate is null)
+        {
+            throw new GeoCoordinateNotFoundException($"GEO location of {request.City}, {request.Country} not found");
+        }
 
         var tasks = this.providers
             .Select(provider => provider.GetAsync(geoCoordinate, request.Date, cancellationToken));

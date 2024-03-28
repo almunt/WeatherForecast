@@ -1,0 +1,132 @@
+{
+	"info": {
+		"_postman_id": "7656553e-7ed3-4a1d-bc0f-c22b91654ae4",
+		"name": "WeatherForecast",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29843673"
+	},
+	"item": [
+		{
+			"name": "London",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{SERVICE_URL}}/forecast?city=London&country=GB&date=2024-03-30",
+					"host": [
+						"{{SERVICE_URL}}"
+					],
+					"path": [
+						"forecast"
+					],
+					"query": [
+						{
+							"key": "city",
+							"value": "London"
+						},
+						{
+							"key": "country",
+							"value": "GB"
+						},
+						{
+							"key": "date",
+							"value": "2024-03-30"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Berlin",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{SERVICE_URL}}/forecast?city=Berlin&country=GE&date=2024-04-03",
+					"host": [
+						"{{SERVICE_URL}}"
+					],
+					"path": [
+						"forecast"
+					],
+					"query": [
+						{
+							"key": "city",
+							"value": "Berlin"
+						},
+						{
+							"key": "country",
+							"value": "GE"
+						},
+						{
+							"key": "date",
+							"value": "2024-04-03"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Chisinau",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{SERVICE_URL}}/forecast?city=Chisinau&country=MD&date=2024-04-02",
+					"host": [
+						"{{SERVICE_URL}}"
+					],
+					"path": [
+						"forecast"
+					],
+					"query": [
+						{
+							"key": "city",
+							"value": "Chisinau"
+						},
+						{
+							"key": "country",
+							"value": "MD"
+						},
+						{
+							"key": "date",
+							"value": "2024-04-02"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "SERVICE_URL",
+			"value": "https://weatherforecastapi20240328214631.azurewebsites.net",
+			"type": "string"
+		}
+	]
+}

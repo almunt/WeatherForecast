@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WeatherForecast.Api.Contracts;
 using WeatherForecast.Application.Domain;
+using WeatherForecast.Application.Exceptions;
 using WeatherForecast.Application.Queries;
 
 namespace WeatherForecast.Api.Controllers;
@@ -21,20 +22,36 @@ public class WeatherForecastController : ControllerBase
     private readonly IMediator mediator;
 
     [HttpGet]
-    public async Task<WeatherForecastResponse> Get(
+    public async Task<IActionResult> Get(
         [FromQuery] string city,
         [FromQuery] string country,
         [FromQuery] DateOnly date,
         CancellationToken cancellationToken)
     {
+        if (DateTime.UtcNow.Date > new DateTime(date, new TimeOnly(0)))
+        {
+            return this.BadRequest("Historical data are not available due to free API Keys");
+        }
+
         var request = new GetWeatherForecast(city, country, date);
 
-        var result = await this.mediator.Send(request, cancellationToken);
+        IReadOnlyCollection<ProviderWeatherForecast> forecast;
+        try
+        {
+            forecast = await this.mediator.Send(request, cancellationToken);
+        }
+        catch (GeoCoordinateNotFoundException exception)
+        {
+            //TODO: handle exceptions in UnhandledExceptionHandler and convert them to ProblemDetails
+            return this.BadRequest(exception.Message);
+        }
 
-        return new WeatherForecastResponse(
+        var response = new WeatherForecastResponse(
             date,
-            OpenWeatherMap: this.ToWeatherForecastItems(result.ElementAt(0)),
-            WeatherApiCom: this.ToWeatherForecastItems(result.ElementAt(1)));
+            OpenWeatherMap: this.ToWeatherForecastItems(forecast.ElementAt(0)),
+            WeatherApiCom: this.ToWeatherForecastItems(forecast.ElementAt(1)));
+
+        return this.Ok(response);
     }
 
     //TODO: Use AutoMapper

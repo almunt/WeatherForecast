@@ -17,8 +17,6 @@ internal sealed class OpenWeatherMapProvider : IWeatherForecastProvider
 
     public async Task<ProviderWeatherForecast> GetAsync(GeoCoordinate geoCoordinate, DateOnly date, CancellationToken cancellationToken)
     {
-        var query = $"{geoCoordinate.Latitude},{geoCoordinate.Longitude}";
-
         var response = await this.apiClient.GetForecastAsync(
                 geoCoordinate.Latitude,
                 geoCoordinate.Longitude,
