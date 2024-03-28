@@ -8,7 +8,7 @@ using WeatherForecast.Application.Queries;
 namespace WeatherForecast.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("forecast")]
 public class WeatherForecastController : ControllerBase
 {
     public WeatherForecastController(IMediator mediator)
@@ -38,6 +38,6 @@ public class WeatherForecastController : ControllerBase
     }
 
     //TODO: Use AutoMapper
-    private IReadOnlyCollection<WeatherForecastItem> ToWeatherForecastItems(WeatherForecastDate weatherForecast)
+    private IReadOnlyCollection<WeatherForecastItem> ToWeatherForecastItems(ProviderWeatherForecast weatherForecast)
         => weatherForecast.Hours.Select(hour => new WeatherForecastItem(hour.DateTime, hour.Temperature, hour.WindSpeed)).ToArray();
 }

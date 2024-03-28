@@ -5,7 +5,7 @@ namespace WeatherForecast.Infra.Providers.WeatherApiProvider;
 internal interface IWeatherApiClient
 {
     [Get("/v1/forecast.json")]
-    Task<WeatherForecast> Search([Query] string q, [Query] int days, CancellationToken cancellationToken);
+    Task<WeatherForecast> GetForecastAsync([Query] string q, [Query] int days, CancellationToken cancellationToken);
 
     #region Contracts
 

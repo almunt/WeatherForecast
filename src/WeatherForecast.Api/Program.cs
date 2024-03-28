@@ -20,9 +20,9 @@ var openWeatherMapOptions = builder.Configuration.GetSection("OpenWeatherMap")
 var weatherApiOptions = builder.Configuration.GetSection("WeatherApi")
     .Get<WeatherForecastApiOptions>();
 
-builder.Services.AddGeoCodingService(openWeatherMapOptions);
-builder.Services.AddOpenWeatherMapProvider(openWeatherMapOptions);
-builder.Services.AddWeatherApiProvider(weatherApiOptions);
+builder.Services.AddGeoCodingService(openWeatherMapOptions!);
+builder.Services.AddOpenWeatherMapProvider(openWeatherMapOptions!);
+builder.Services.AddWeatherApiProvider(weatherApiOptions!);
 
 builder.Services.AddCache();
 

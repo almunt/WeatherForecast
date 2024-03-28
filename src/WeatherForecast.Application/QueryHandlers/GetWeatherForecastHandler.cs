@@ -5,7 +5,7 @@ using WeatherForecast.Application.Queries;
 
 namespace WeatherForecast.Application.QueryHandlers;
 
-internal sealed class GetWeatherForecastHandler : IRequestHandler<GetWeatherForecast, IReadOnlyCollection<WeatherForecastDate>>
+internal sealed class GetWeatherForecastHandler : IRequestHandler<GetWeatherForecast, IReadOnlyCollection<ProviderWeatherForecast>>
 {
     public GetWeatherForecastHandler(
         IGeoCodingService geoCodingService,
@@ -25,7 +25,7 @@ internal sealed class GetWeatherForecastHandler : IRequestHandler<GetWeatherFore
     private readonly IEnumerable<IWeatherForecastProvider> providers;
     private readonly IWeatherForecastCache cache;
 
-    public async Task<IReadOnlyCollection<WeatherForecastDate>> Handle(GetWeatherForecast request, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<ProviderWeatherForecast>> Handle(GetWeatherForecast request, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(request, nameof(request));
 

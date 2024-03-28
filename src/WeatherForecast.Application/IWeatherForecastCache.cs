@@ -4,10 +4,10 @@ namespace WeatherForecast.Application;
 
 public interface IWeatherForecastCache
 {
-    Task<IReadOnlyCollection<WeatherForecastDate>?> GetAsync(string key, CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<ProviderWeatherForecast>?> GetAsync(string key, CancellationToken cancellationToken);
 
     Task SetAsync(
         string key,
-        IReadOnlyCollection<WeatherForecastDate> value,
+        IReadOnlyCollection<ProviderWeatherForecast> value,
         CancellationToken cancellationToken);
 }

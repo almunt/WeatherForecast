@@ -37,7 +37,17 @@ public static class ServiceCollectionExtensions
         EnsureArg.IsNotNull(services, nameof(services));
         EnsureArg.IsNotNull(options, nameof(options));
 
-        services.AddScoped<IWeatherForecastProvider>(_ => new OpenWeatherMapProvider(options.ApiKey));
+        services.AddScoped(_ =>
+        {
+            var settings = new RefitSettings
+            {
+                HttpMessageHandlerFactory = () => new HttpMessageHandler("appid", options.ApiKey)
+            };
+
+            return RestService.For<IOpenWeatherMapClient>(options.ApiUrl.ToString(), settings);
+        });
+
+        services.AddScoped<IWeatherForecastProvider, OpenWeatherMapProvider>();
 
         return services;
     }

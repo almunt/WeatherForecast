@@ -1,6 +1,4 @@
 ﻿using EnsureThat;
-using Weather.NET;
-using Weather.NET.Enums;
 using WeatherForecast.Application;
 using WeatherForecast.Application.Domain;
 
@@ -8,31 +6,34 @@ namespace WeatherForecast.Infra.Providers.OpenWeatherMap;
 
 internal sealed class OpenWeatherMapProvider : IWeatherForecastProvider
 {
-    public OpenWeatherMapProvider(string apiKey)
+    public OpenWeatherMapProvider(IOpenWeatherMapClient apiClient)
     {
-        EnsureArg.IsNotNull(apiKey, nameof(apiKey));
+        EnsureArg.IsNotNull(apiClient, nameof(apiClient));
 
-        this.weatherClient = new WeatherClient(apiKey);
+        this.apiClient = apiClient;
     }
 
-    private readonly WeatherClient weatherClient;
+    private readonly IOpenWeatherMapClient apiClient;
 
-    public async Task<WeatherForecastDate> GetAsync(GeoCoordinate geoCoordinate, DateOnly date, CancellationToken cancellationToken)
+    public async Task<ProviderWeatherForecast> GetAsync(GeoCoordinate geoCoordinate, DateOnly date, CancellationToken cancellationToken)
     {
-        var response = await this.weatherClient.GetForecastAsync(
+        var query = $"{geoCoordinate.Latitude},{geoCoordinate.Longitude}";
+
+        var response = await this.apiClient.GetForecastAsync(
                 geoCoordinate.Latitude,
                 geoCoordinate.Longitude,
-                measurement: Measurement.Metric)
+                "metric",
+                cancellationToken)
             .ConfigureAwait(false);
 
-        var forecast = response
-            .Where(model => model.AnalysisDate.Date == new DateTime(date, new TimeOnly(0)))
+        var forecast = response.List
+            .Where(hour => DateTime.Parse(hour.Dt_txt).Date == new DateTime(date, new TimeOnly(0)))
             .ToArray();
 
         var hours = forecast.Any()
-            ? forecast.Select(model => new WeatherForecastHour(model.AnalysisDate, model.Main.Temperature, model.Wind.Speed)).ToArray()
-            : Array.Empty<WeatherForecastHour>();
+            ? forecast.Select(hour => new HourlyWeatherForecast(DateTime.Parse(hour.Dt_txt), hour.Main.Temp, hour.Wind.Speed)).ToArray()
+            : Array.Empty<HourlyWeatherForecast>();
 
-        return new WeatherForecastDate(date, hours);
+        return new ProviderWeatherForecast(date, hours);
     }
 }

@@ -4,7 +4,7 @@ namespace WeatherForecast.Application;
 
 public interface IWeatherForecastProvider
 {
-    Task<WeatherForecastDate> GetAsync(
+    Task<ProviderWeatherForecast> GetAsync(
         GeoCoordinate geoCoordinate,
         DateOnly date,
         CancellationToken cancellationToken);

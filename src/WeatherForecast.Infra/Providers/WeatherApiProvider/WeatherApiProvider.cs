@@ -15,20 +15,20 @@ internal sealed class WeatherApiProvider : IWeatherForecastProvider
 
     private readonly IWeatherApiClient apiClient;
 
-    public async Task<WeatherForecastDate> GetAsync(GeoCoordinate geoCoordinate, DateOnly date, CancellationToken cancellationToken)
+    public async Task<ProviderWeatherForecast> GetAsync(GeoCoordinate geoCoordinate, DateOnly date, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(geoCoordinate, nameof(geoCoordinate));
 
         var query = $"{geoCoordinate.Latitude},{geoCoordinate.Longitude}";
 
-        var response = await this.apiClient.Search(query, 3, cancellationToken).ConfigureAwait(false);
+        var response = await this.apiClient.GetForecastAsync(query, 3, cancellationToken).ConfigureAwait(false);
 
         var forecast = response.Forecast.Forecastday.FirstOrDefault(day => day.Date == new DateTime(date, new TimeOnly(0)));
 
         var hours = forecast is null
-            ? Array.Empty<WeatherForecastHour>()
-            : forecast.Hour.Select(hour => new WeatherForecastHour(DateTime.Parse(hour.Time), hour.Temp_c, hour.Wind_kph)).ToArray();
+            ? Array.Empty<HourlyWeatherForecast>()
+            : forecast.Hour.Select(hour => new HourlyWeatherForecast(DateTime.Parse(hour.Time), hour.Temp_c, hour.Wind_kph)).ToArray();
 
-        return new WeatherForecastDate(date, hours);
+        return new ProviderWeatherForecast(date, hours);
     }
 }

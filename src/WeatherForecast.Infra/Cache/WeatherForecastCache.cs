@@ -20,12 +20,12 @@ internal sealed class WeatherForecastCache : IWeatherForecastCache
     private readonly IMemoryCache memoryCache;
     private readonly MemoryCacheEntryOptions options = new() { SlidingExpiration = TimeSpan.FromMinutes(SlidingIntervalInMin) };
 
-    public Task<IReadOnlyCollection<WeatherForecastDate>?> GetAsync(string key, CancellationToken cancellationToken)
-        => Task.FromResult(this.memoryCache.TryGetValue(key, out IReadOnlyCollection<WeatherForecastDate>? forecast)
+    public Task<IReadOnlyCollection<ProviderWeatherForecast>?> GetAsync(string key, CancellationToken cancellationToken)
+        => Task.FromResult(this.memoryCache.TryGetValue(key, out IReadOnlyCollection<ProviderWeatherForecast>? forecast)
             ? forecast
             : default);
 
-    public Task SetAsync(string key, IReadOnlyCollection<WeatherForecastDate> value, CancellationToken cancellationToken)
+    public Task SetAsync(string key, IReadOnlyCollection<ProviderWeatherForecast> value, CancellationToken cancellationToken)
     {
         this.memoryCache.Set(key, value, this.options);
         return Task.CompletedTask;
