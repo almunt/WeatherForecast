@@ -38,15 +38,7 @@ public static class ServiceCollectionExtensions
         EnsureArg.IsNotNull(services, nameof(services));
         EnsureArg.IsNotNull(options, nameof(options));
 
-        services.AddScoped(_ =>
-        {
-            var settings = new RefitSettings
-            {
-                HttpMessageHandlerFactory = () => new HttpMessageHandler("appid", options.ApiKey)
-            };
-
-            return RestService.For<IOpenWeatherMapClient>(options.ApiUrl.ToString(), settings);
-        });
+        services.AddScoped(_ => RestService.For<IOpenWeatherMapClient>(options.ApiUrl.ToString(), BuildRefitSettings("appid", options.ApiKey)));
 
         services.AddScoped<IWeatherForecastProvider, OpenWeatherMapProvider>();
 
@@ -59,15 +51,7 @@ public static class ServiceCollectionExtensions
         EnsureArg.IsNotNull(services, nameof(services));
         EnsureArg.IsNotNull(options, nameof(options));
 
-        services.AddScoped(_ =>
-        {
-            var settings = new RefitSettings
-            {
-                HttpMessageHandlerFactory = () => new HttpMessageHandler("key", options.ApiKey)
-            };
-
-            return RestService.For<IWeatherApiClient>(options.ApiUrl.ToString(), settings);
-        });
+        services.AddScoped(_ => RestService.For<IWeatherApiClient>(options.ApiUrl.ToString(), BuildRefitSettings("key", options.ApiKey)));
 
         services.AddScoped<IWeatherForecastProvider, WeatherApiProvider>();
 
@@ -79,15 +63,7 @@ public static class ServiceCollectionExtensions
         EnsureArg.IsNotNull(services, nameof(services));
         EnsureArg.IsNotNull(options, nameof(options));
 
-        services.AddScoped(_ =>
-        {
-            var settings = new RefitSettings
-            {
-                HttpMessageHandlerFactory = () => new HttpMessageHandler("key", options.ApiKey)
-            };
-
-            return RestService.For<IVisualCrossingClient>(options.ApiUrl.ToString(), settings);
-        });
+        services.AddScoped(_ => RestService.For<IVisualCrossingClient>(options.ApiUrl.ToString(), BuildRefitSettings("key", options.ApiKey)));
 
         services.AddScoped<IWeatherForecastProvider, VisualCrossingProvider>();
 
@@ -104,5 +80,15 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IWeatherForecastCache, WeatherForecastCache>();
 
         return services;
+    }
+
+    private static RefitSettings BuildRefitSettings(string apiKeyParam, string apiKey)
+    {
+        var settings = new RefitSettings
+        {
+            HttpMessageHandlerFactory = () => new HttpMessageHandler(apiKeyParam, apiKey)
+        };
+
+        return settings;
     }
 }
