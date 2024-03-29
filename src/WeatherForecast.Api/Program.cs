@@ -34,11 +34,8 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IW
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
