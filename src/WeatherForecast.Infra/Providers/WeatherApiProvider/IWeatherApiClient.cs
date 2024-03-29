@@ -11,11 +11,11 @@ internal interface IWeatherApiClient
 
     public record WeatherForecast(WeatherForecastDays Forecast);
 
-    public record WeatherForecastDays(IReadOnlyCollection<WeatherForecastDay> Forecastday);
+    public record WeatherForecastDays(IReadOnlyCollection<DailyWeatherForecast> Forecastday);
 
-    public record WeatherForecastDay(DateTime Date, IReadOnlyCollection<WeatherForecastHour> Hour);
+    public record DailyWeatherForecast(DateTime Date, IReadOnlyCollection<HourlyWeatherForecast> Hour);
 
-    public record WeatherForecastHour(string Time, double Temp_c, double Wind_kph);
+    public record HourlyWeatherForecast(string Time, double Temp_c, double Wind_kph);
 
     #endregion
 }

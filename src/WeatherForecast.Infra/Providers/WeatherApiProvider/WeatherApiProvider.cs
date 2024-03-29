@@ -13,7 +13,7 @@ internal sealed class WeatherApiProvider : IWeatherForecastProvider
         this.apiClient = apiClient;
     }
 
-    private const int ForecastDays = 30;
+    private const int ForecastDays = 14;
 
     private readonly IWeatherApiClient apiClient;
 

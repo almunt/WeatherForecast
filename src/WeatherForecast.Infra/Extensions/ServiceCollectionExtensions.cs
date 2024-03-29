@@ -6,6 +6,7 @@ using WeatherForecast.Infra.Cache;
 using WeatherForecast.Infra.GeoCoding;
 using WeatherForecast.Infra.Options;
 using WeatherForecast.Infra.Providers.OpenWeatherMap;
+using WeatherForecast.Infra.Providers.VisualCrossing;
 using WeatherForecast.Infra.Providers.WeatherApiProvider;
 
 namespace WeatherForecast.Infra.Extensions;
@@ -72,6 +73,27 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    public static IServiceCollection AddVisualCrossingProvider(this IServiceCollection services, WeatherForecastApiOptions options)
+    {
+        EnsureArg.IsNotNull(services, nameof(services));
+        EnsureArg.IsNotNull(options, nameof(options));
+
+        services.AddScoped(_ =>
+        {
+            var settings = new RefitSettings
+            {
+                HttpMessageHandlerFactory = () => new HttpMessageHandler("key", options.ApiKey)
+            };
+
+            return RestService.For<IVisualCrossingClient>(options.ApiUrl.ToString(), settings);
+        });
+
+        services.AddScoped<IWeatherForecastProvider, VisualCrossingProvider>();
+
+        return services;
+    }
+
 
     public static IServiceCollection AddCache(this IServiceCollection services)
     {

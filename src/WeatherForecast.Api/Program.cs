@@ -17,12 +17,16 @@ builder.Services.AddSwaggerGen(options =>
 
 var openWeatherMapOptions = builder.Configuration.GetSection("OpenWeatherMap")
     .Get<WeatherForecastApiOptions>();
-var weatherApiOptions = builder.Configuration.GetSection("WeatherApi")
-    .Get<WeatherForecastApiOptions>();
-
 builder.Services.AddGeoCodingService(openWeatherMapOptions!);
 builder.Services.AddOpenWeatherMapProvider(openWeatherMapOptions!);
+
+var weatherApiOptions = builder.Configuration.GetSection("WeatherApi")
+    .Get<WeatherForecastApiOptions>();
 builder.Services.AddWeatherApiProvider(weatherApiOptions!);
+
+var visualCrossingOptions = builder.Configuration.GetSection("VisualCrossing")
+    .Get<WeatherForecastApiOptions>();
+builder.Services.AddVisualCrossingProvider(visualCrossingOptions!);
 
 builder.Services.AddCache();
 

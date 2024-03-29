@@ -9,9 +9,9 @@ internal interface IOpenWeatherMapClient
 
     #region Contracts
 
-    public record WeatherForecast(IReadOnlyCollection<WeatherForecastHour> List);
+    public record WeatherForecast(IReadOnlyCollection<HourlyWeatherForecast> List);
 
-    public record WeatherForecastHour(string Dt_txt, WeatherForecastMain Main, WeatherForecastWind Wind);
+    public record HourlyWeatherForecast(string Dt_txt, WeatherForecastMain Main, WeatherForecastWind Wind);
 
     public record WeatherForecastMain(double Temp);
 
